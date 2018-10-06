@@ -16,6 +16,7 @@ class Bot:
             :param PlayerInfo: Your bot's current state.
         """
         self.PlayerInfo = PlayerInfo
+        self.persistent_map = gamemap.load_persistent_map()
 
     def execute_turn(self, gameMap, visiblePlayers):
         """
@@ -23,7 +24,8 @@ class Bot:
             :param gameMap: The gamemap.
             :param visiblePlayers:  The list of visible players.
         """
-        self.pathfinding.setMap(gameMap)
+        self.persistent_map.update(gameMap, self.PlayerInfo.HouseLocation)
+        self.pathfinding.setMap(self.persistent_map)
         print("Position: %r" % self.PlayerInfo.Position)
 
         # Tuer un ennemi s'il est dans une case adjacente
@@ -38,7 +40,7 @@ class Bot:
             action = self.createMoveToHome()
         else:
             print("Not full, going to mine...")
-            action = self.mineClosest(gameMap, visiblePlayers)
+            action = self.mineClosest(self.persistent_map, visiblePlayers)
         
         print("Action: %r" % action)
         return action
