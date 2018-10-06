@@ -20,10 +20,8 @@ class Bot:
             :param visiblePlayers:  The list of visible players.
         """
 
-        # Write your bot here. Use functions from aiHelper to instantiate your actions.
+        self.pathfinding.setMap(gameMap)
         move_destination = bot.implementation.get_closest(gameMap.findTileContent(TileContent.Resource), self.PlayerInfo.Position)
-        print(self.PlayerInfo)
-        print(gameMap)
         return create_move_action(Point(-1, 0))
 
     def after_turn(self):
