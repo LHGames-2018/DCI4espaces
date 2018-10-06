@@ -22,6 +22,11 @@ class Bot:
             :param visiblePlayers:  The list of visible players.
         """
 
+        # If player is full, move back to his home.
+        if self.PlayerInfo.CarriedResources == self.PlayerInfo.CarryingCapacity:
+            return self.createMoveToHome()
+
+
         self.pathfinding.setMap(gameMap)
         move_destination = bot.implementation.get_closest(gameMap.findTileContent(TileContent.Resource), self.PlayerInfo.Position)
         path = self.pathfinding.solve(self.PlayerInfo.Position, move_destination.Position)
@@ -38,3 +43,10 @@ class Bot:
         Gets called after executeTurn
         """
         pass
+
+    # Move the player back to his home 
+    def createMoveToHome(self):
+        path = self.pathfinding.solve(self.PlayerInfo.Position, self.PlayerInfo.HouseLocation)
+        direction = MapHelper.getMoveTowards(self.PlayerInfo.Position, path[0])
+        return create_move_action(direction)
+
