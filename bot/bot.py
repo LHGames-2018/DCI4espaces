@@ -1,4 +1,5 @@
 from helper import *
+import bot.implementation
 # from astar import AStarSolver
 
 # class Pathfinding(AStarSolver):
@@ -31,6 +32,7 @@ class Bot:
         """
 
         # Write your bot here. Use functions from aiHelper to instantiate your actions.
+        move_destination = bot.implementation.get_closest(gameMap.findTileContent(TileContent.Resource), self.PlayerInfo.Position)
         print(self.PlayerInfo)
         print(gameMap)
         return create_move_action(Point(-1, 0))
