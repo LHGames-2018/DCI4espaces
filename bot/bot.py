@@ -27,7 +27,7 @@ class Bot:
 
         # If player is full, move back to his home.
 
-        if self.PlayerInfo.CarriedResources >= self.PlayerInfo.CarryingCapacity:
+        if True or self.PlayerInfo.CarriedResources >= self.PlayerInfo.CarryingCapacity:
             print("I'm full! Going back home...")
             action = self.createMoveToHome()
         else:
