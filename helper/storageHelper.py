@@ -26,6 +26,7 @@ class StorageHelper:
             if 'LOCAL_STORAGE' in os.environ:
                 StorageHelper.__path = os.environ['LOCAL_STORAGE'] + '/document.json'
             else:
+                #StorageHelper.__path = 'C:/Programmation/dci/lh-games-server/lh-games-server/data/document.json'
                 StorageHelper.__path = '/data/document.json'
 
         if StorageHelper.__document is None:

@@ -92,6 +92,7 @@ class Bot:
 
     def mineClosest(self, gameMap, visiblePlayers):
         choices = gameMap.findTileContent(TileContent.Resource)
+        #print(list(choices))
         paths = [self.pathfinding.solve(self.PlayerInfo.Position, choice.Position) for choice in choices]
         paths = [path for path in paths if path is not None]
         paths.sort(key = lambda path: len(path))
@@ -100,6 +101,7 @@ class Bot:
             print("NO PATH POSSIBLE FIX THIS")
             return self.exploreAround(gameMap, visiblePlayers)
         else:
+            print("Path: " + str(paths))
             path = paths[0]
             target_node = path[-1]
             print("Found path to resource at: %r" % target_node)
