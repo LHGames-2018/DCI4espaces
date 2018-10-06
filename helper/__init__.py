@@ -5,3 +5,4 @@ from .structs import *
 from .tile import *
 from .storageHelper import *
 from .store import *
+from .mapHelper import *

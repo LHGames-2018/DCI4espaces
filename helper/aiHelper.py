@@ -54,16 +54,19 @@ def create_purchase_action(item):
     item, except for health potions.
         :param item: The type of item to purchase.
     """
-    return _create_action("PurchaseAction", item)
+    actionContent = ActionContent("PurchaseAction", item)
+    return json.dumps(actionContent.__dict__)
 
-def create_upgrade_action(item):
+
+def create_upgrade_action(upgrade):
     """
-    Creates a upgrade action for the specified type. You need to be ON
-    your house for this action to succeed. If you are on any other
-    type of tile, the action will fail. You can only upgrade 5 times for one type
+    Creates an upgrade action the given upgradeType. You need to be ON
+    your house tile for this action to succeed. If you are on any other
+    type of tile, the action will fail.
         :param item: The type of upgrade.
     """
-    return _create_action("UpgradeAction", item)
+    actionContent = ActionContent("UpgradeAction", upgrade)
+    return json.dumps(actionContent.__dict__)
 
 def create_empty_action():
     """
