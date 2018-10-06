@@ -1,5 +1,5 @@
 from helper import *
-import bot.implementation
+from bot.implementation import *
 from bot.decision import decision
 from bot.pathfinding import Pathfinding
 from helper.mapHelper import MapHelper
@@ -29,6 +29,11 @@ class Bot:
         print("Position: %r" % self.PlayerInfo.Position)
         print("Total Resources:" + str(self.PlayerInfo.TotalResources))
 
+        # Tuer un ennemi s'il est dans une case adjacente
+        res = self.killOtherPlayerWhenTouching(gameMap, visiblePlayers)
+        if res != None:
+            return res
+
         # If player is full, move back to his home.
         if self.PlayerInfo.CarriedResources >= self.PlayerInfo.CarryingCapacity:
             print("I'm full! Going back home...")
@@ -46,6 +51,19 @@ class Bot:
         print("Action: %r" % action)
         return action
     
+    def killOtherPlayerWhenTouching(self, gameMap, visiblePlayers):
+        if len(visiblePlayers) > 0:
+            enemy = get_closest(visiblePlayers, self.PlayerInfo.Position)
+
+            if MapHelper.isNextTo(enemy.Position, self.PlayerInfo.Position):
+                print("Another player has moved too close! Let's attack him!")
+                p = MapHelper.getMoveTowards(self.PlayerInfo.Position, enemy.Position)
+
+                return create_attack_action(p)
+
+        print("No enemy worth attacking.")
+        return None
+
     def exploreAround(self, gameMap, visiblePlayers):
         # Quand il y a pas de chemin: Explorer en allant dans une direction arbitraire
         x_ou_y = random.randint(0,2)
@@ -112,7 +130,7 @@ class Bot:
     def callDecision(self, gameMap, visiblePlayers):
         # On prend tout ce qui existe de pertinent, donc on exclut les murs et la lave
         # parce que c'est au pathfinder de dealer avec ça pour les éviter. 
-        players = gameMap.findTileContent(TileContent.Player)
+        players = gameMap.findTileContent(TileContent.Player)   # FIXME PROBABLEMENT BROKE, utiliser visiblePlayers
         houses = gameMap.findTileContent(TileContent.House)
         resource = gameMap.findTileContent(TileContent.Resource)
         shop = gameMap.findTileContent(TileContent.Shop)
