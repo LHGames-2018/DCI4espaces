@@ -23,6 +23,12 @@ class GameMap:
             self.xMax = self.xMin + len(self.tiles)
             self.yMax = self.yMin + len(self.tiles[0])
             self.visibleDistance = (self.xMax - self.xMin - 1) / 2
+    
+    def findTileContent(self, content):
+        for row in self.tiles:
+            for col in row:
+                if col.TileContent == content:
+                    yield col
 
     def deserializeMap(self, serializedMap):
         serializedMap = serializedMap[1:-2]

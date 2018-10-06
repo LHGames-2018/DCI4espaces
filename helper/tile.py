@@ -7,6 +7,9 @@ class Tile:
         self.TileContent = tile_content
         self.Position = Point(x, y)
         pass
+    
+    def __repr__(self):
+        return "(%d, %d, %s)" % (self.Position.x, self.Position.y, TileContent.getName(self.TileContent))
 
 
 class ResourceTile(Tile):
@@ -24,3 +27,17 @@ class TileContent(Enum):
     Resource = 4
     Shop = 5
     Player = 6
+
+    @staticmethod
+    def getName(value):
+        names = {
+            TileContent.Empty: "Empty",
+            TileContent.Wall: "Wall",
+            TileContent.House: "House",
+            TileContent.Lava: "Lava",
+            TileContent.Resource: "Resource",
+            TileContent.Shop: "Shop",
+            TileContent.Player: "Player"
+        }
+        
+        return names[value]
