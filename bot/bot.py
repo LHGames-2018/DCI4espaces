@@ -1,4 +1,15 @@
-from helper import *
+from helper import Point
+from astar import AStarSolver
+
+class Pathfinding(AStarSolver):
+    def __init__(self):
+        AStarSolver.__init__(self, Point)
+        self.map = None
+    
+    def setMap(self, map):
+        self.map = map
+    
+    def is_valid_neighbor(self, node):
 
 
 class Bot:
@@ -21,7 +32,7 @@ class Bot:
 
         # Write your bot here. Use functions from aiHelper to instantiate your actions.
         print(self.PlayerInfo)
-        print(self.gameMap)
+        print(gameMap)
         return create_move_action(Point(1, 0))
 
     def after_turn(self):
