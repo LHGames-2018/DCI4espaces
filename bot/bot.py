@@ -59,7 +59,7 @@ class Bot:
         liste.extend(resource)
         liste.extend(shop)
 
-        decision(liste, self.PlayerInfo)
+        best_tuile = decision(liste, self.PlayerInfo)
 
         #choices = bot.implementation.sort_by_distance(choices, self.PlayerInfo.Position)
 

@@ -14,7 +14,8 @@ def decision(tile_list, player_info):
 
     data = [[None for x in range(w)] for y in range(h)]
 
-    # Setup la première colonne et les données pour setuper la deuxième
+    # Setup la première colonne en copiant les données dedans
+    # et les données pour setuper la troisième qui contient la distance
     for i in range(len(tile_list)):
         data[i][0] = tile_list[i]
 
@@ -30,11 +31,10 @@ def decision(tile_list, player_info):
 
     # On évalue la décision à prendre. On cherche le plus grand poids.
     best = None
-    distances = []
+    biggest_poids = 0
     for i in range(len(tile_list)):
-        distances.append(tile_list[i])
+        if tile_list[1] > biggest_poids:
+            best = tile_list[0]
+            biggest_poids = tile_list[1]
 
-    
-
-
-
+    return best
