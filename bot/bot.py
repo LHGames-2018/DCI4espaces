@@ -29,11 +29,14 @@ class Bot:
         self.pathfinding.setMap(self.persistent_map)
         print("Position: %r" % self.PlayerInfo.Position)
         print("Total Resources:" + str(self.PlayerInfo.TotalResources))
+        print("Upgrades: " + str(self.PlayerInfo.UpgradeLevels))
 
         # Tuer un ennemi s'il est dans une case adjacente
         res = self.killOtherPlayerWhenClose(gameMap, visiblePlayers)
         if res != None:
             return res
+
+        # Go towards AIoye's base to kill him
 
         # If player is full, move back to his home.
         if self.PlayerInfo.CarriedResources >= self.PlayerInfo.CarryingCapacity:
@@ -104,7 +107,6 @@ class Bot:
 
     def mineClosest(self, gameMap, visiblePlayers):
         choices = gameMap.findTileContent(TileContent.Resource)
-        #print(list(choices))
         paths = [self.pathfinding.solve(self.PlayerInfo.Position, choice.Position) for choice in choices]
         paths = [path for path in paths if path is not None]
         paths.sort(key = lambda path: len(path))
@@ -113,7 +115,6 @@ class Bot:
             print("NO PATH POSSIBLE FIX THIS")
             return self.exploreAround(gameMap, visiblePlayers)
         else:
-            print("Path: " + str(paths))
             path = paths[0]
             target_node = path[-1]
             print("Found path to resource at: %r" % target_node)
