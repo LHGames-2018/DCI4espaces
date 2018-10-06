@@ -78,11 +78,10 @@ class Bot:
         return create_move_action(direction)
 
     def goToAndDo(self, gameMap, to, action):
-        # First we align the player with the y position of his house.
         direction = MapHelper.getMoveTowards(self.PlayerInfo.Position, to)
 
         if MapHelper.isNextTo(self.PlayerInfo.Position, to):
             return action(direction)
         else:
-            return PathingActions.doActionInPath(gameMap, self.PlayerInfo.Position, direction, TileContent.wall, create_attack_action)
+            return PathingActions.doActionInPath(gameMap, self.PlayerInfo.Position, direction, TileContent.Wall, create_attack_action)
 
