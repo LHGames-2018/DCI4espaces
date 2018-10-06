@@ -25,9 +25,12 @@ class Bot:
 
         # If player is full, move back to his home.
         if self.PlayerInfo.CarriedResources == self.PlayerInfo.CarryingCapacity:
-            return self.createMoveToHome()
+            action = self.createMoveToHome()
         else:
-            return self.mineClosest(gameMap, visiblePlayers)
+            action = self.mineClosest(gameMap, visiblePlayers)
+        
+        print(action)
+        return action
     
     def mineClosest(self, gameMap, visiblePlayers):
         choices = gameMap.findTileContent(TileContent.Resource)
