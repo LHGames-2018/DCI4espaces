@@ -1,5 +1,6 @@
 from helper import *
 import bot.implementation
+from bot.decision import decision
 from bot.pathfinding import Pathfinding
 from helper.mapHelper import MapHelper
 from bot.pathingActions import PathingActions
@@ -43,6 +44,24 @@ class Bot:
 
         print("NO PATH POSSIBLE FIX THIS")
         return create_move_action(Point(0, 0))
+
+    def callDecision(self, gameMap, visiblePlayers):
+        # On prend tout ce qui existe de pertinent, donc on exclut les murs et la lave
+        # parce que c'est au pathfinder de dealer avec ça pour les éviter. 
+        players = gameMap.findTileContent(TileContent.Player)
+        houses = gameMap.findTileContent(TileContent.House)
+        resource = gameMap.findTileContent(TileContent.Resource)
+        shop = gameMap.findTileContent(TileContent.Shop)
+
+        liste = []
+        liste.extend(players)
+        liste.extend(houses)
+        liste.extend(resource)
+        liste.extend(shop)
+
+        decision(liste, self.PlayerInfo)
+
+        #choices = bot.implementation.sort_by_distance(choices, self.PlayerInfo.Position)
 
     def after_turn(self):
         """
