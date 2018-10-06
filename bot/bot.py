@@ -1,5 +1,5 @@
 from helper import *
-import implementation
+#import implementation
 from bot.pathfinding import Pathfinding
 
 class Bot:
