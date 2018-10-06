@@ -1,5 +1,51 @@
 from helper.tile import *
+from helper.storageHelper import *
+import pickle
+import base64
 
+persistent_map_key = "p_map"
+
+def save_persistent_map(persistent_map):
+    encoded_map = base64.b64encode(pickle.dumps(persistent_map)).decode()
+    StorageHelper.write(persistent_map_key, encoded_map)
+
+def load_persistent_map():
+    try:
+        pickled_map = base64.b64decode(StorageHelper.read(persistent_map_key))
+        return pickle.loads(pickled_map)
+    except KeyError:
+        return Persistent_map()
+
+class Persistent_map:
+    def __init__(self):
+        self.width = 132
+        self.height = 198
+        self.map = []
+        for _ in range(self.width):
+            self.map.append([TileContent.Unknown] * self.height)
+
+    def update(self, game_map, player_house):
+        visible_map = game_map.tiles
+        for row in visible_map:
+            for tile in row:
+                x = tile.Position.x
+                y = tile.Position.y
+                
+                self.map[x][y] = tile
+        
+        self.map[player_house.x][player_house.y] = TileContent.House
+        self.map[player_house.x - 22][player_house.y] = TileContent.Shop
+
+        save_persistent_map(self)
+    
+    def findTileContent(self, content):
+        for row in self.map:
+            for col in row:
+                if col.TileContent == content:
+                    yield col
+
+    def get(self, x, y):
+        return self.tiles[x - self.xMin][y - self.yMin]
 
 class GameMap:
     def __init__(self, serializedMap, xMin, yMin, wallsAreBreakable):
