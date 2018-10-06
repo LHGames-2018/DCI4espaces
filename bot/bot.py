@@ -22,14 +22,17 @@ class Bot:
             :param visiblePlayers:  The list of visible players.
         """
         self.pathfinding.setMap(gameMap)
+        print("Position: %r" % self.PlayerInfo.Position)
 
         # If player is full, move back to his home.
         if self.PlayerInfo.CarriedResources == self.PlayerInfo.CarryingCapacity:
+            print("I'm full! Going back home...")
             action = self.createMoveToHome()
         else:
+            print("Not full, going to mine...")
             action = self.mineClosest(gameMap, visiblePlayers)
         
-        print(action)
+        print("Action: %r" % action)
         return action
     
     def mineClosest(self, gameMap, visiblePlayers):
@@ -42,6 +45,7 @@ class Bot:
 
             if path is not None:
                 direction = MapHelper.getMoveTowards(self.PlayerInfo.Position, path[0])
+                print("Found path to resource at: %r" % closest)
                 return PathingActions.doActionInPath(gameMap, self.PlayerInfo.Position, direction, TileContent.Resource, create_collect_action)
 
         print("NO PATH POSSIBLE FIX THIS")
