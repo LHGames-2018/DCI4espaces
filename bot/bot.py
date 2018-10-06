@@ -80,7 +80,7 @@ class Bot:
 
             pathThroughHouse = self.findPathThroughHouse(target_node)
 
-            if len(pathThroughHouse) == len(path):
+            if pathThroughHouse is not None and len(pathThroughHouse) == len(path):
                 print("Found a better mining path that goes through my house! :D ")
                 path = pathThroughHouse
 
@@ -92,7 +92,13 @@ class Bot:
     
     def findPathThroughHouse(self, target):
         playerToHouse = self.pathfinding.solve(self.PlayerInfo.Position, self.PlayerInfo.HouseLocation)
+        if playerToHouse is None:
+            return None
+        
         houseToTarget = self.pathfinding.solve(self.PlayerInfo.HouseLocation, target)
+        if houseToTarget is None:
+            return None
+        
         return playerToHouse + houseToTarget
 
     def callDecision(self, gameMap, visiblePlayers):
