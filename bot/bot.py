@@ -1,4 +1,4 @@
-from helper import Point
+from helper import *
 # from astar import AStarSolver
 
 # class Pathfinding(AStarSolver):
