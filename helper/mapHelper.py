@@ -27,5 +27,9 @@ class MapHelper:
         return abs(first.x - second.x) + abs(first.y - second.y) == 1
 
     @staticmethod
+    def isCloseTo(first, second):
+        return abs(first.x - second.x) + abs(first.y - second.y) <= 6
+
+    @staticmethod
     def isOn(first, second):
         return abs(first.x - second.x) + abs(first.y - second.y) == 0

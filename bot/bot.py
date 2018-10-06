@@ -30,7 +30,7 @@ class Bot:
         print("Total Resources:" + str(self.PlayerInfo.TotalResources))
 
         # Tuer un ennemi s'il est dans une case adjacente
-        res = self.killOtherPlayerWhenTouching(gameMap, visiblePlayers)
+        res = self.killOtherPlayerWhenClose(gameMap, visiblePlayers)
         if res != None:
             return res
 
@@ -51,17 +51,29 @@ class Bot:
         print("Action: %r" % action)
         return action
     
-    def killOtherPlayerWhenTouching(self, gameMap, visiblePlayers):
+    def killOtherPlayerWhenClose(self, gameMap, visiblePlayers):
         if len(visiblePlayers) > 0:
             enemy = get_closest(visiblePlayers, self.PlayerInfo.Position)
 
             if MapHelper.isNextTo(enemy.Position, self.PlayerInfo.Position):
-                print("Another player has moved too close! Let's attack him!")
+                print("Another player has moved too close! Attack him!")
                 p = MapHelper.getMoveTowards(self.PlayerInfo.Position, enemy.Position)
 
                 return create_attack_action(p)
 
-        print("No enemy worth attacking.")
+            # Quand en dedans d'un certain rayon
+            elif MapHelper.isCloseTo(enemy.Position, self.PlayerInfo.Position):
+                print("Another player is close. Move towards him in order to attack!")
+                
+                path = self.pathfinding.solve(self.PlayerInfo.Position, enemy.Position)
+
+                if path is not None:
+                    direction = MapHelper.getMoveTowards(self.PlayerInfo.Position, path[0])
+                    return create_move_action(direction)
+                else:
+                    print("Problem: No path to enemy!!!")
+
+        print("No enemy to attack.")
         return None
 
     def exploreAround(self, gameMap, visiblePlayers):
