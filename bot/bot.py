@@ -51,7 +51,8 @@ class Bot:
             target_node = path[-1]
             print("Found path to resource at: %r" % target_node)
 
-            pathThroughHouse = self.findPathThroughHouse(target_node)
+            # pathThroughHouse = self.findPathThroughHouse(target_node)
+            pathThroughHouse = None
 
             if pathThroughHouse is not None and len(pathThroughHouse) == len(path):
                 print("Found a better mining path that goes through my house! :D ")
