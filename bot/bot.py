@@ -4,6 +4,7 @@ from bot.decision import decision
 from bot.pathfinding import Pathfinding
 from helper.mapHelper import MapHelper
 from bot.pathingActions import PathingActions
+import random
 
 class Bot:
     def __init__(self):
@@ -15,6 +16,7 @@ class Bot:
             :param PlayerInfo: Your bot's current state.
         """
         self.PlayerInfo = PlayerInfo
+        self.persistent_map = gamemap.load_persistent_map()
 
     def execute_turn(self, gameMap, visiblePlayers):
         """
@@ -22,7 +24,8 @@ class Bot:
             :param gameMap: The gamemap.
             :param visiblePlayers:  The list of visible players.
         """
-        self.pathfinding.setMap(gameMap)
+        self.persistent_map.update(gameMap, self.PlayerInfo.HouseLocation)
+        self.pathfinding.setMap(self.persistent_map)
         print("Position: %r" % self.PlayerInfo.Position)
         print("Total Resources:" + str(self.PlayerInfo.TotalResources))
 
@@ -35,11 +38,37 @@ class Bot:
             action = self.goToAndBuy(gameMap, storePosition, create_upgrade_action, UpgradeType.CollectingSpeed)
         else:
             print("Not full, going to mine...")
-            action = self.mineClosest(gameMap, visiblePlayers)
+            action = self.mineClosest(self.persistent_map, visiblePlayers)
         
         print("Action: %r" % action)
         return action
     
+    def exploreAround(self, gameMap, visiblePlayers):
+        # Quand il y a pas de chemin: Explorer en allant dans une direction arbitraire
+        x_ou_y = random.randint(0,2)
+        # 1/3 chance d'aller vers la droite, sinon on va vers le haut.
+        p = Point(0, 1) if x_ou_y == 1 else Point(1, 0)
+
+        path = self.pathfinding.solve(self.PlayerInfo.Position, self.PlayerInfo.Position + p)
+
+        if path is not None:
+            direction = MapHelper.getMoveTowards(self.PlayerInfo.Position, path[0])
+            return PathingActions.doActionInPath(gameMap, self.PlayerInfo.Position, direction, TileContent.Resource, create_collect_action)
+
+        # Pas de chemin possible! Essayer un autre direction arbitraire
+        x_ou_y = random.randint(0,2)
+        # 1/3 chance d'aller vers le haut, sinon on va vers la gauche.
+        p = Point(1, 0) if x_ou_y == 1 else Point(0, -1)
+
+        path = self.pathfinding.solve(self.PlayerInfo.Position, self.PlayerInfo.Position + p)
+
+        if path is not None:
+            direction = MapHelper.getMoveTowards(self.PlayerInfo.Position, path[0])
+            return PathingActions.doActionInPath(gameMap, self.PlayerInfo.Position, direction, TileContent.Resource, create_collect_action)
+
+        print("NO PATH POSSIBLE FIX THIS")
+        return self.createMoveToHome()
+
     def mineClosest(self, gameMap, visiblePlayers):
         choices = gameMap.findTileContent(TileContent.Resource)
         paths = [self.pathfinding.solve(self.PlayerInfo.Position, choice.Position) for choice in choices]
@@ -48,7 +77,7 @@ class Bot:
 
         if len(paths) == 0:
             print("NO PATH POSSIBLE FIX THIS")
-            return self.createMoveToHome()
+            return self.exploreAround(gameMap, visiblePlayers)
         else:
             path = paths[0]
             target_node = path[-1]

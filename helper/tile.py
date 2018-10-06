@@ -27,6 +27,7 @@ class TileContent(Enum):
     Resource = 4
     Shop = 5
     Player = 6
+    Unknown = 7
 
     @staticmethod
     def getName(value):
@@ -37,7 +38,8 @@ class TileContent(Enum):
             TileContent.Lava: "Lava",
             TileContent.Resource: "Resource",
             TileContent.Shop: "Shop",
-            TileContent.Player: "Player"
+            TileContent.Player: "Player",
+            TileContent.Unknown: "Unknown",
         }
         
         return names[value]
