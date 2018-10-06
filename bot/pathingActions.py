@@ -4,9 +4,9 @@ from helper.aiHelper import *
 
 class PathingActions:
 
-    # Move the player towards a point. If a "triggeringTileContent" is encountered,
+    # Move the player towards a direction. If a "triggeringTileContent" is encountered,
     # change the action of the player from moving to "action".
-    # "point" must be a unit vector, ex: Point(-1, 0) for left.
+    # "direction" must be a unit vector, ex: Point(-1, 0) for left.
     @staticmethod
     def doActionInPath(gameMap, currentPosition, direction, triggeringTileContent, action):
         nextPosition = Point(currentPosition.x + direction.x, currentPosition.y + direction.y)
