@@ -23,27 +23,49 @@ class Bot:
             :param visiblePlayers:  The list of visible players.
         """
         self.pathfinding.setMap(gameMap)
+        print("Position: %r" % self.PlayerInfo.Position)
 
         # If player is full, move back to his home.
-        if self.PlayerInfo.CarriedResources == self.PlayerInfo.CarryingCapacity:
-            return self.createMoveToHome()
+        if self.PlayerInfo.CarriedResources >= self.PlayerInfo.CarryingCapacity:
+            print("I'm full! Going back home...")
+            action = self.createMoveToHome()
         else:
-            return self.mineClosest(gameMap, visiblePlayers)
+            print("Not full, going to mine...")
+            action = self.mineClosest(gameMap, visiblePlayers)
+        
+        print("Action: %r" % action)
+        return action
     
     def mineClosest(self, gameMap, visiblePlayers):
         choices = gameMap.findTileContent(TileContent.Resource)
-        choices = bot.implementation.sort_by_distance(choices, self.PlayerInfo.Position)
+        paths = [self.pathfinding.solve(self.PlayerInfo.Position, choice.Position) for choice in choices]
+        paths = [path for path in paths if path is not None]
+        paths.sort(key = lambda path: len(path))
 
-        while len(choices) > 0:
-            closest = choices.pop(0)
-            path = self.pathfinding.solve(self.PlayerInfo.Position, closest.Position)
+        if len(paths) == 0:
+            print("NO PATH POSSIBLE FIX THIS")
+            return self.createMoveToHome()
+        else:
+            path = paths[0]
+            target_node = path[-1]
+            print("Found path to resource at: %r" % target_node)
 
-            if path is not None:
-                direction = MapHelper.getMoveTowards(self.PlayerInfo.Position, path[0])
-                return PathingActions.doActionInPath(gameMap, self.PlayerInfo.Position, direction, TileContent.Resource, create_collect_action)
+            pathThroughHouse = self.findPathThroughHouse(target_node)
 
-        print("NO PATH POSSIBLE FIX THIS")
-        return self.createMoveToHome()
+            if len(pathThroughHouse) == len(path):
+                print("Found a better mining path that goes through my house! :D ")
+                path = pathThroughHouse
+
+            print("Path: %r" % path)
+
+            next_node = path[0]
+            direction = MapHelper.getMoveTowards(self.PlayerInfo.Position, next_node)
+            return PathingActions.doActionInPath(gameMap, self.PlayerInfo.Position, direction, TileContent.Resource, create_collect_action)
+    
+    def findPathThroughHouse(self, target):
+        playerToHouse = self.pathfinding.solve(self.PlayerInfo.Position, self.PlayerInfo.HouseLocation)
+        houseToTarget = self.pathfinding.solve(self.PlayerInfo.HouseLocation, target)
+        return playerToHouse + houseToTarget
 
     def callDecision(self, gameMap, visiblePlayers):
         # On prend tout ce qui existe de pertinent, donc on exclut les murs et la lave
