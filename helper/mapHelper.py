@@ -28,7 +28,7 @@ class MapHelper:
 
     @staticmethod
     def isCloseTo(first, second):
-        return abs(first.x - second.x) + abs(first.y - second.y) <= 6
+        return abs(first.x - second.x) + abs(first.y - second.y) <= 12
 
     @staticmethod
     def isOn(first, second):
