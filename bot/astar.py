@@ -31,10 +31,10 @@ class AStarSolver:
 
 			if current == target:
 				return self.build_path(target, came_from)
-			
+						
 			closed.append(current)
 
-			for neighbor in self.neighbors(current):
+			for neighbor in self.neighbors(current, target):
 				if neighbor in closed:
 					continue
 				
@@ -82,7 +82,7 @@ class AStarSolver:
 		"""
 		return self.distance(start, target)
 	
-	def neighbors(self, node):
+	def neighbors(self, node, target):
 		"""
 		Generate a node's neighbors.
 		"""
@@ -90,7 +90,7 @@ class AStarSolver:
 			previous = [d(node) - (1 if d == current_dimension else 0) for d in self.dimensions]
 			next = [d(node) + (1 if d == current_dimension else 0) for d in self.dimensions]
 			for neighbor in [self.Class(*previous), self.Class(*next)]:
-				if self.is_valid_neighbor(neighbor):
+				if self.is_valid_neighbor(neighbor) or neighbor == target:
 					yield neighbor
 	
 	def is_valid_neighbor(self, node):
