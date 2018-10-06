@@ -21,3 +21,7 @@ class MapHelper:
         else:
             print("[MapHelper.getMoveTowards] You are already at the given position.")
             return Point(0, 0)
+
+    @staticmethod
+    def isNextTo(first, second):
+        return abs(first.x - second.x) + abs(first.y - second.y) == 1
