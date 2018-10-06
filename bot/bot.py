@@ -26,6 +26,7 @@ class Bot:
         print("Position: %r" % self.PlayerInfo.Position)
 
         # If player is full, move back to his home.
+
         if self.PlayerInfo.CarriedResources >= self.PlayerInfo.CarryingCapacity:
             print("I'm full! Going back home...")
             action = self.createMoveToHome()
@@ -102,4 +103,12 @@ class Bot:
         path = self.pathfinding.solve(self.PlayerInfo.Position, self.PlayerInfo.HouseLocation)
         direction = MapHelper.getMoveTowards(self.PlayerInfo.Position, path[0])
         return create_move_action(direction)
+
+    def goToAndDo(self, gameMap, to, action):
+        direction = MapHelper.getMoveTowards(self.PlayerInfo.Position, to)
+
+        if MapHelper.isNextTo(self.PlayerInfo.Position, to):
+            return action(direction)
+        else:
+            return PathingActions.doActionInPath(gameMap, self.PlayerInfo.Position, direction, TileContent.Wall, create_attack_action)
 
