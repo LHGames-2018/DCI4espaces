@@ -23,18 +23,25 @@ class Bot:
             :param visiblePlayers:  The list of visible players.
         """
         self.pathfinding.setMap(gameMap)
-        print("Position: %r" % self.PlayerInfo.Position)
+        # print("Position: %r" % self.PlayerInfo.Position)
 
-        # If player is full, move back to his home.
+        # # If player is full, move back to his home.
 
-        if True or self.PlayerInfo.CarriedResources >= self.PlayerInfo.CarryingCapacity:
-            print("I'm full! Going back home...")
-            action = self.createMoveToHome()
-        else:
-            print("Not full, going to mine...")
-            action = self.mineClosest(gameMap, visiblePlayers)
+        # if True or self.PlayerInfo.CarriedResources >= self.PlayerInfo.CarryingCapacity:
+        #     print("I'm full! Going back home...")
+        #     action = self.createMoveToHome()
+        # else:
+        #     print("Not full, going to mine...")
+        #     action = self.mineClosest(gameMap, visiblePlayers)
         
-        print("Action: %r" % action)
+        # print("Action: %r" % action)
+        if self.PlayerInfo.HouseLocation.x != self.PlayerInfo.Position.x:
+            action = create_move_action(Point(1, 0))
+        elif self.PlayerInfo.HouseLocation.y != self.PlayerInfo.Position.y:
+            action = create_move_action(Point(0, -1))
+        else:
+            action = create_empty_action()
+
         return action
     
     def mineClosest(self, gameMap, visiblePlayers):
