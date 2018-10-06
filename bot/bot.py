@@ -37,21 +37,21 @@ class Bot:
     
     def mineClosest(self, gameMap, visiblePlayers):
         choices = gameMap.findTileContent(TileContent.Resource)
-        choices = bot.implementation.sort_by_distance(choices, self.PlayerInfo.Position)
+        paths = [self.pathfinding.solve(self.PlayerInfo.Position, choice.Position) for choice in choices]
+        paths = [path for path in paths if path is not None]
+        paths.sort(key = lambda path: len(path))
 
-        while len(choices) > 0:
-            closest = choices.pop(0)
-            path = self.pathfinding.solve(self.PlayerInfo.Position, closest.Position)
+        if len(paths) == 0:
+            print("NO PATH POSSIBLE FIX THIS")
+            return self.createMoveToHome()
+        else:
+            path = paths[0]
+            print("Found path to resource at: %r" % path[-1])
             print("Path: %r" % path)
 
-            if path is not None:
-                direction = MapHelper.getMoveTowards(self.PlayerInfo.Position, path[0])
-                print("Found path to resource at: %r" % closest)
-                return PathingActions.doActionInPath(gameMap, self.PlayerInfo.Position, direction, TileContent.Resource, create_collect_action)
-
-        print("NO PATH POSSIBLE FIX THIS")
-        return self.createMoveToHome()
-
+            direction = MapHelper.getMoveTowards(self.PlayerInfo.Position, path[0])
+            return PathingActions.doActionInPath(gameMap, self.PlayerInfo.Position, direction, TileContent.Resource, create_collect_action)
+                
     def after_turn(self):
         """
         Gets called after executeTurn
