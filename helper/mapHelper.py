@@ -1,4 +1,4 @@
-from structs import Point
+from helper.structs import Point
 
 class MapHelper:
 
@@ -15,9 +15,9 @@ class MapHelper:
         
         # If we are closer in X position, move in the y axis
         if absoluteDistX <= absoluteDistY and distY != 0:
-            return Point(0, distY/absoluteDistY) # abs is used to keep the sign on the move.
+            return Point(0, distY // absoluteDistY) # abs is used to keep the sign on the move.
         elif absoluteDistX > absoluteDistY and distX != 0:
-            return Point(distX/absoluteDistX, 0)
+            return Point(distX // absoluteDistX, 0)
         else:
             print("[MapHelper.getMoveTowards] You are already at the given position.")
             return Point(0, 0)
