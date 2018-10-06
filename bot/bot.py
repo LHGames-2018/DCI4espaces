@@ -1,21 +1,10 @@
 from helper import *
 import bot.implementation
-# from astar import AStarSolver
-
-# class Pathfinding(AStarSolver):
-#     def __init__(self):
-#         AStarSolver.__init__(self, Point)
-#         self.map = None
-    
-#     def setMap(self, map):
-#         self.map = map
-    
-#     def is_valid_neighbor(self, node):
-#         pass
+from bot.pathfinding import Pathfinding
 
 class Bot:
     def __init__(self):
-        pass
+        self.pathfinding = Pathfinding()
 
     def before_turn(self, playerInfo):
         """

@@ -30,6 +30,9 @@ class GameMap:
                 if col.TileContent == content:
                     yield col
 
+    def get(self, x, y):
+        return self.tiles[x - self.xMin][y - self.yMin]
+
     def deserializeMap(self, serializedMap):
         serializedMap = serializedMap[1:-2]
         rows = serializedMap.split('[')

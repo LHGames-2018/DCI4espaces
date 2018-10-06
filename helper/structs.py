@@ -31,11 +31,17 @@ class Point(object):
 
     def __str__(self):
         return "{{{0}, {1}}}".format(self.x, self.y)
+    
+    def __repr__(self):
+        return str(self)
 
     def __eq__(self, other):
         if isinstance(other, Point):
             return self.x == other.x and self.y == other.y
         return NotImplemented
+    
+    def __hash__(self):
+        return hash((self.x, self.y))
 
     # Distance between two Points
     @staticmethod
