@@ -1,5 +1,6 @@
 from helper import *
-from pathfinding import Pathfinding
+import implementation
+from bot.pathfinding import Pathfinding
 
 class Bot:
     def __init__(self):
@@ -19,14 +20,8 @@ class Bot:
             :param visiblePlayers:  The list of visible players.
         """
 
-        # Write your bot here. Use functions from aiHelper to instantiate your actions.
         self.pathfinding.setMap(gameMap)
-        
-        for tile in gameMap.findTileContent(TileContent.Resource):
-            print(tile)
-        
-        print(gameMap.tiles)
-        return create_move_action(Point(-1, 0))
+        return create_move_action(Point(1, 0))
 
     def after_turn(self):
         """
