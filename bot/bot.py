@@ -39,17 +39,16 @@ class Bot:
         if self.PlayerInfo.CarriedResources >= self.PlayerInfo.CarryingCapacity:
             print("I'm full! Going back home...")
             action = self.createMoveToHome()
-        elif Store.canPlayerBuyUpgrade(self.PlayerInfo, UpgradeType.CollectingSpeed):
-            print("Going for an upgrade: CollectingSpeed")
-            return self.buyUpgrade(UpgradeType.CollectingSpeed)
-        elif Store.canPlayerBuyUpgrade(self.PlayerInfo, UpgradeType.CarryingCapacity):
-            print("Going for an upgrade: CarryingCapacity")
-            return self.buyUpgrade(UpgradeType.CarryingCapacity)
+        # elif Store.canPlayerBuyUpgrade(self.PlayerInfo, UpgradeType.CollectingSpeed):
+        #     print("Going for an upgrade: CollectingSpeed")
+        #     return self.buyUpgrade(UpgradeType.CollectingSpeed)
+        # elif Store.canPlayerBuyUpgrade(self.PlayerInfo, UpgradeType.CarryingCapacity):
+        #     print("Going for an upgrade: CarryingCapacity")
+        #     return self.buyUpgrade(UpgradeType.CarryingCapacity)
         else:
             print("Not full, going to mine...")
             action = self.mineClosest(self.persistent_map, visiblePlayers)
-        
-        print("Action: %r" % action)
+
         return action
     
     def killOtherPlayerWhenClose(self, gameMap, visiblePlayers):
@@ -119,7 +118,8 @@ class Bot:
             target_node = path[-1]
             print("Found path to resource at: %r" % target_node)
 
-            pathThroughHouse = self.findPathThroughHouse(target_node)
+            # pathThroughHouse = self.findPathThroughHouse(target_node)
+            pathThroughHouse = None
 
             if pathThroughHouse is not None and len(pathThroughHouse) == len(path):
                 print("Found a better mining path that goes through my house! :D ")
@@ -169,7 +169,12 @@ class Bot:
     # Move the player back to his home 
     def createMoveToHome(self):
         path = self.pathfinding.solve(self.PlayerInfo.Position, self.PlayerInfo.HouseLocation)
-        direction = MapHelper.getMoveTowards(self.PlayerInfo.Position, path[0])
+
+        if path is not None:
+            direction = MapHelper.getMoveTowards(self.PlayerInfo.Position, path[0])
+        else:
+            direction = MapHelper.getMoveTowards(self.PlayerInfo.Position, self.PlayerInfo.HouseLocation)
+            
         return create_move_action(direction)
 
     def goToAndDo(self, gameMap, to, action):
