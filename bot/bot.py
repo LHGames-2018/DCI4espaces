@@ -43,7 +43,7 @@ class Bot:
                 return PathingActions.doActionInPath(gameMap, self.PlayerInfo.Position, direction, TileContent.Resource, create_collect_action)
 
         print("NO PATH POSSIBLE FIX THIS")
-        return create_move_action(Point(0, 0))
+        return self.createMoveToHome()
 
     def callDecision(self, gameMap, visiblePlayers):
         # On prend tout ce qui existe de pertinent, donc on exclut les murs et la lave
