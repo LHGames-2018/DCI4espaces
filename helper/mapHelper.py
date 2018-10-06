@@ -25,3 +25,7 @@ class MapHelper:
     @staticmethod
     def isNextTo(first, second):
         return abs(first.x - second.x) + abs(first.y - second.y) == 1
+
+    @staticmethod
+    def isOn(first, second):
+        return abs(first.x - second.x) + abs(first.y - second.y) == 0

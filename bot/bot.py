@@ -34,8 +34,11 @@ class Bot:
             print("I'm full! Going back home...")
             action = self.createMoveToHome()
         elif Store.canPlayerBuyUpgrade(self.PlayerInfo, UpgradeType.CollectingSpeed):
-            storePosition = Point( self.PlayerInfo.HouseLocation.x, self.PlayerInfo.HouseLocation.y - 22)
-            action = self.goToAndBuy(gameMap, storePosition, create_upgrade_action, UpgradeType.CollectingSpeed)
+            print("Going for an upgrade: CollectingSpeed")
+            return self.buyUpgrade(UpgradeType.CollectingSpeed)
+        elif Store.canPlayerBuyUpgrade(self.PlayerInfo, UpgradeType.CarryingCapacity):
+            print("Going for an upgrade: CarryingCapacity")
+            return self.buyUpgrade(UpgradeType.CarryingCapacity)
         else:
             print("Not full, going to mine...")
             action = self.mineClosest(self.persistent_map, visiblePlayers)
@@ -144,11 +147,13 @@ class Bot:
         else:
             return PathingActions.doActionInPath(gameMap, self.PlayerInfo.Position, direction, TileContent.Wall, create_attack_action)
 
-    def goToAndBuy(self, gameMap, to, action, actionParams):
-        direction = MapHelper.getMoveTowards(self.PlayerInfo.Position, to)
+    def findClosest(self, gameMap, tileContent):
+        choices = gameMap.findTileContent(tileContent)
+        return get_closest(choices, self.PlayerInfo.Position)
 
-        if direction.x == 0 and direction.y == 0:
-            return action(actionParams)
+    def buyUpgrade(self, upgradeType): 
+        if MapHelper.isOn(self.PlayerInfo.Position, self.PlayerInfo.HouseLocation):
+            return create_upgrade_action(UpgradeType.CollectingSpeed)
         else:
-            return PathingActions.doActionInPath(gameMap, self.PlayerInfo.Position, direction, TileContent.Wall, create_attack_action)
+            return self.createMoveToHome() 
 
