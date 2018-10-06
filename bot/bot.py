@@ -102,7 +102,12 @@ class Bot:
     # Move the player back to his home 
     def createMoveToHome(self):
         path = self.pathfinding.solve(self.PlayerInfo.Position, self.PlayerInfo.HouseLocation)
-        direction = MapHelper.getMoveTowards(self.PlayerInfo.Position, path[0])
+
+        if path is not None:
+            direction = MapHelper.getMoveTowards(self.PlayerInfo.Position, path[0])
+        else:
+            direction = MapHelper.getMoveTowards(self.PlayerInfo.Position, self.PlayerInfo.HouseLocation)
+            
         return create_move_action(direction)
 
     def goToAndDo(self, gameMap, to, action):
