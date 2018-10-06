@@ -4,11 +4,18 @@ from helper.aiHelper import *
 
 class PathingActions:
 
+    # Move the player towards a point. If a "triggeringTileContent" is encountered,
+    # change the action of the player from moving to "action".
+    # "point" must be a unit vector, ex: Point(-1, 0) for left.
     @staticmethod
-    def destroyInPath(gameMap, playerInfo, move):
-        nextPosition = Point(playerInfo.x + move.x, playerInfo.y + move.y)
+    def doActionInPath(gameMap, currentPosition, direction, triggeringTileContent, action):
+        nextPosition = Point(currentPosition.x + direction.x, currentPosition.y + direction.y)
         # If there is a wall at the given position, destroy it.
-        if gameMap.getTileAt(nextPosition) == TileContent.Wall:
-            return create_attack_action(move)
+        if gameMap.getTileAt(nextPosition) == triggeringTileContent:
+            return action(direction)
         else:
-            return create_move_action(move)
+            return create_move_action(direction)
+
+
+
+    

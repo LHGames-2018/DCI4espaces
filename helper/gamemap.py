@@ -3,7 +3,7 @@ from helper.storageHelper import *
 import pickle
 import base64
 
-persistent_map_key = "p_map"
+persistent_map_key = "anus"
 
 def save_persistent_map(persistent_map):
     encoded_map = base64.b64encode(pickle.dumps(persistent_map)).decode()
@@ -20,9 +20,11 @@ class Persistent_map:
     def __init__(self):
         self.width = 132
         self.height = 198
-        self.map = []
-        for _ in range(self.width):
-            self.map.append([TileContent.Unknown] * self.height)
+        self.tiles = []
+        for col in range(self.width):
+            self.tiles.append([])
+            for row in range(self.height):
+                self.tiles[col].append(Tile(TileContent.Unknown, col, row))
 
     def update(self, game_map, player_house):
         visible_map = game_map.tiles
@@ -31,21 +33,28 @@ class Persistent_map:
                 x = tile.Position.x
                 y = tile.Position.y
                 
-                self.map[x][y] = tile
+                self.tiles[x][y] = tile
         
-        self.map[player_house.x][player_house.y] = TileContent.House
-        self.map[player_house.x - 22][player_house.y] = TileContent.Shop
+        x = player_house.x
+        y = player_house.y
+        self.tiles[x][y] = Tile(TileContent.House, x, y)
+        self.tiles[x - 22][y] = Tile(TileContent.Shop, x, y)
 
         save_persistent_map(self)
     
     def findTileContent(self, content):
-        for row in self.map:
+        for row in self.tiles:
             for col in row:
                 if col.TileContent == content:
                     yield col
 
     def get(self, x, y):
-        return self.tiles[x - self.xMin][y - self.yMin]
+        return self.tiles[x][y]
+    
+    def getTileAt(self, position):
+        x = position.x
+        y = position.y
+        return self.tiles[x][y].TileContent
 
 class GameMap:
     def __init__(self, serializedMap, xMin, yMin, wallsAreBreakable):
