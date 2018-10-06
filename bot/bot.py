@@ -25,7 +25,7 @@ class Bot:
         print("Position: %r" % self.PlayerInfo.Position)
 
         # If player is full, move back to his home.
-        if self.PlayerInfo.CarriedResources == self.PlayerInfo.CarryingCapacity:
+        if self.PlayerInfo.CarriedResources >= self.PlayerInfo.CarryingCapacity:
             print("I'm full! Going back home...")
             action = self.createMoveToHome()
         else:
@@ -42,6 +42,7 @@ class Bot:
         while len(choices) > 0:
             closest = choices.pop(0)
             path = self.pathfinding.solve(self.PlayerInfo.Position, closest.Position)
+            print("Path: %r" % path)
 
             if path is not None:
                 direction = MapHelper.getMoveTowards(self.PlayerInfo.Position, path[0])
