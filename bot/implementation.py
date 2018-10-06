@@ -2,6 +2,6 @@
 from helper import *
 
 def get_closest(tile_list, current_point):
-    return sorted(tile_list, key=lambda tile: tile.Position.Distance(current_point, tile.Position))[0].Position
+    return sorted(tile_list, key=lambda tile: tile.Position.Distance(current_point, tile.Position))[0]
 
 
