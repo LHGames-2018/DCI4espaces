@@ -21,17 +21,23 @@ class Bot:
             :param gameMap: The gamemap.
             :param visiblePlayers:  The list of visible players.
         """
-
         self.pathfinding.setMap(gameMap)
-        move_destination = bot.implementation.get_closest(gameMap.findTileContent(TileContent.Resource), self.PlayerInfo.Position)
-        path = self.pathfinding.solve(self.PlayerInfo.Position, move_destination.Position)
+        return self.mineClosest(gameMap, visiblePlayers)
+    
+    def mineClosest(self, gameMap, visiblePlayers):
+        choices = gameMap.findTileContent(TileContent.Resource)
+        choices = bot.implementation.sort_by_distance(choices, self.PlayerInfo.Position)
 
-        if path is None:
-            print("NO PATH POSSIBLE FIX THIS")
-            return create_move_action(Point(0, 0))
+        while len(choices) > 0:
+            closest = choices.pop(0)
+            path = self.pathfinding.solve(self.PlayerInfo.Position, closest.Position)
 
-        direction = MapHelper.getMoveTowards(self.PlayerInfo.Position, path[0])
-        return PathingActions.doActionInPath(gameMap, self.PlayerInfo.Position, direction, TileContent.Resource, create_collect_action)
+            if path is not None:
+                direction = MapHelper.getMoveTowards(self.PlayerInfo.Position, path[0])
+                return PathingActions.doActionInPath(gameMap, self.PlayerInfo.Position, direction, TileContent.Resource, create_collect_action)
+
+        print("NO PATH POSSIBLE FIX THIS")
+        return create_move_action(Point(0, 0))
 
     def after_turn(self):
         """

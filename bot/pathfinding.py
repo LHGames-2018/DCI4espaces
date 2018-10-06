@@ -10,4 +10,7 @@ class Pathfinding(AStarSolver):
         self.map = map
     
     def is_valid_neighbor(self, node):
-        return self.map.get(node.x, node.y).TileContent == TileContent.Empty
+        try:
+            return self.map.get(node.x, node.y).TileContent == TileContent.Empty
+        except IndexError:
+            return False
