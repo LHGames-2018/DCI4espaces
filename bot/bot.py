@@ -21,22 +21,28 @@ class Bot:
             :param gameMap: The gamemap.
             :param visiblePlayers:  The list of visible players.
         """
+        self.pathfinding.setMap(gameMap)
 
         # If player is full, move back to his home.
         if self.PlayerInfo.CarriedResources == self.PlayerInfo.CarryingCapacity:
             return self.createMoveToHome()
+        else:
+            return self.mineClosest(gameMap, visiblePlayers)
+    
+    def mineClosest(self, gameMap, visiblePlayers):
+        choices = gameMap.findTileContent(TileContent.Resource)
+        choices = bot.implementation.sort_by_distance(choices, self.PlayerInfo.Position)
 
+        while len(choices) > 0:
+            closest = choices.pop(0)
+            path = self.pathfinding.solve(self.PlayerInfo.Position, closest.Position)
 
-        self.pathfinding.setMap(gameMap)
-        move_destination = bot.implementation.get_closest(gameMap.findTileContent(TileContent.Resource), self.PlayerInfo.Position)
-        path = self.pathfinding.solve(self.PlayerInfo.Position, move_destination.Position)
+            if path is not None:
+                direction = MapHelper.getMoveTowards(self.PlayerInfo.Position, path[0])
+                return PathingActions.doActionInPath(gameMap, self.PlayerInfo.Position, direction, TileContent.Resource, create_collect_action)
 
-        if path is None:
-            print("NO PATH POSSIBLE FIX THIS")
-            return create_move_action(Point(0, 0))
-
-        direction = MapHelper.getMoveTowards(self.PlayerInfo.Position, path[0])
-        return PathingActions.doActionInPath(gameMap, self.PlayerInfo.Position, direction, TileContent.Resource, create_collect_action)
+        print("NO PATH POSSIBLE FIX THIS")
+        return self.createMoveToHome()
 
     def after_turn(self):
         """
