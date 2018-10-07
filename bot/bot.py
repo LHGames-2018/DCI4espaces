@@ -43,7 +43,7 @@ class Bot:
         if self.PlayerInfo.CarriedResources >= self.PlayerInfo.CarryingCapacity:
             print("I'm full! Going back home...")
             action = self.createMoveToHome()
-"""         elif Store.canPlayerBuyUpgrade(self.PlayerInfo, UpgradeType.CollectingSpeed):
+            """elif Store.canPlayerBuyUpgrade(self.PlayerInfo, UpgradeType.CollectingSpeed):
             print("Going for an upgrade: CollectingSpeed")
             return self.buyUpgrade(UpgradeType.CollectingSpeed)
         elif Store.canPlayerBuyUpgrade(self.PlayerInfo, UpgradeType.CarryingCapacity):
