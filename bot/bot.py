@@ -176,7 +176,7 @@ class Bot:
         else:
             direction = MapHelper.getMoveTowards(self.PlayerInfo.Position, self.PlayerInfo.HouseLocation)'''
             
-        return goToAndDo(self.persistent_map, self.PlayerInfo.HouseLocation, create_move_action)
+        return self.goToAndDo(self.persistent_map, self.PlayerInfo.HouseLocation, create_move_action)
 
     def goToAndDo(self, gameMap, to, action):
         direction = MapHelper.getMoveTowards(self.PlayerInfo.Position, to)
