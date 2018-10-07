@@ -29,6 +29,7 @@ class Bot:
         self.pathfinding.setMap(self.persistent_map)
         print("Position: %r" % self.PlayerInfo.Position)
         print("Total Resources:" + str(self.PlayerInfo.TotalResources))
+        print("Score:" + str(self.PlayerInfo.Score))
         print("Upgrades: " + str(self.PlayerInfo.UpgradeLevels))
 
         # Tuer un ennemi s'il est dans une case adjacente
@@ -42,12 +43,12 @@ class Bot:
         if self.PlayerInfo.CarriedResources >= self.PlayerInfo.CarryingCapacity:
             print("I'm full! Going back home...")
             action = self.createMoveToHome()
-        # elif Store.canPlayerBuyUpgrade(self.PlayerInfo, UpgradeType.CollectingSpeed):
-        #     print("Going for an upgrade: CollectingSpeed")
-        #     return self.buyUpgrade(UpgradeType.CollectingSpeed)
-        # elif Store.canPlayerBuyUpgrade(self.PlayerInfo, UpgradeType.CarryingCapacity):
-        #     print("Going for an upgrade: CarryingCapacity")
-        #     return self.buyUpgrade(UpgradeType.CarryingCapacity)
+"""         elif Store.canPlayerBuyUpgrade(self.PlayerInfo, UpgradeType.CollectingSpeed):
+            print("Going for an upgrade: CollectingSpeed")
+            return self.buyUpgrade(UpgradeType.CollectingSpeed)
+        elif Store.canPlayerBuyUpgrade(self.PlayerInfo, UpgradeType.CarryingCapacity):
+            print("Going for an upgrade: CarryingCapacity")
+            return self.buyUpgrade(UpgradeType.CarryingCapacity) """
         else:
             print("Not full, going to mine...")
             action = self.mineClosest(self.persistent_map, visiblePlayers)
